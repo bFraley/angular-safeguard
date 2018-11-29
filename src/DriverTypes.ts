@@ -1,10 +1,10 @@
-import {InjectionToken} from '@angular/core'
+import { InjectionToken, Inject, PLATFORM_ID } from '@angular/core'
 
 import {PollyfillDriver} from './PolyfillDriver'
 import {Driver} from './Driver'
 import {MemoryStorage} from './MemoryStorage'
 import {CookieStorage} from './CookieStorage'
-import {IDriverType} from './metadata'
+import {IDriverType, IStorage} from './metadata'
 
 export const enum DRIVERS {
   LOCAL = 'local',
@@ -13,10 +13,23 @@ export const enum DRIVERS {
   COOKIE = 'cookie'
 }
 
+class Platform {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, public localstorage: IStorage) { 
+    if (this.platformId !== 'browser') {
+      this.localstorage = null
+    }
+    else {
+      this.localstorage = localStorage
+    }
+  }
+}
+
+let platform: Platform
+
 /* tslint:disable variable-name */
 
 export const LocalStorageDriver: IDriverType = {
-  storage: new PollyfillDriver(localStorage),
+  storage: new PollyfillDriver(platform.localstorage),
   type: DRIVERS.LOCAL
 }
 

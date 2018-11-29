@@ -4,7 +4,7 @@ import {convertFromJSON, serializeDataToString} from './helpers'
 const LOCKER_TEST_KEY = 'LOCKER_TEST_KEY'
 
 export class Driver {
-  constructor(public storage: IWebStorage | ICustomStorage) { }
+  constructor(public storage: IWebStorage | ICustomStorage | any) { }
 
   public set(key: string, data: any, config?: IStorageSetConfig): void {
     this.storage.setItem(key, serializeDataToString(data), config)
